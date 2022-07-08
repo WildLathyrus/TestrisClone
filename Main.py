@@ -16,29 +16,27 @@ import KeyMappingScreen as key
 
 class Main:
 
+    pygame.init()
+    pygame.mixer.init()
+
+    pygame.mouse.set_visible(False)
+
+    game_colors = block.game_colors[0]
+
+    settings = set.Settings()
+    keywatch = set.KeyInput()
+    audio = set.SoundEffects()
+    dropblocks = drop.UpdateDrop()
+
+    startscreen = start.StartScreenGame(settings, game_colors)
+    settingsscreen = option.SettingsScreenGame(settings, game_colors)
+    pausescreen = pause.PauseScreenGame(settings, game_colors)
+    keymapscreen = key.KeyMapScreenGame(settings, game_colors)
+
+    new_game = True
+
     def __init__(self):
-
-        pygame.init()
-        pygame.mixer.init()
-
-        pygame.mouse.set_visible(False)
-
-        self.game_colors = block.game_colors[0]
-
-        self.settings = set.Settings()
-        self.keywatch = set.KeyInput()
-        self.audio = set.SoundEffects()
-        self.dropblocks = drop.UpdateDrop()
-        #self.blocks = blo.Board()
-        self.startscreen = start.StartScreenGame(self.settings, self.game_colors)
-        self.settingsscreen = option.SettingsScreenGame(self.settings, self.game_colors)
-        self.pausescreen = pause.PauseScreenGame(self.settings, self.game_colors)
-        self.keymapscreen = key.KeyMapScreenGame(self.settings, self.game_colors)
-
-        self.new_game = True
-
-        # run game
-        self.MainLoop()
+        return self.MainLoop()
 
     def MainLoop(self):
         # game loopl

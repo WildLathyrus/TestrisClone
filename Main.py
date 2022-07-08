@@ -1,3 +1,19 @@
+"""
+    @author            Josh Page
+    @date_of_creation  July 8th, 2022
+    @date_last_edit    ?? ??, 2022
+    @version           V1.14
+    @description       main file - run to run game
+
+"""
+
+# Currnet->  version: 1
+#            undate: 13
+#
+#     : combined screen files into one file.
+
+
+
 import pygame
 from pygame.locals import *
 
@@ -7,16 +23,15 @@ import GameRules as gam
 import Draw as draw
 
 import DropBlocks as drop
-
-import StartScreen as start
-import SettingsScreen as option
-import PauseScreen as pause
-import KeyMappingScreen as key
+import gameScreens as gs
 
 
 class Main:
 
+    VERSION = 1.14
+
     pygame.init()
+
     pygame.mixer.init()
 
     pygame.mouse.set_visible(False)
@@ -28,10 +43,10 @@ class Main:
     audio = set.SoundEffects()
     dropblocks = drop.UpdateDrop()
 
-    startscreen = start.StartScreenGame(settings, game_colors)
-    settingsscreen = option.SettingsScreenGame(settings, game_colors)
-    pausescreen = pause.PauseScreenGame(settings, game_colors)
-    keymapscreen = key.KeyMapScreenGame(settings, game_colors)
+    startscreen = gs.StartScreenGame(settings, game_colors, VERSION)
+    settingsscreen = gs.SettingsScreenGame(settings, game_colors)
+    pausescreen = gs.PauseScreenGame(settings, game_colors)
+    keymapscreen = gs.KeyMapScreenGame(settings, game_colors)
 
     new_game = True
 

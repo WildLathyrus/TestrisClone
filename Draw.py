@@ -137,9 +137,6 @@ def draw_end(settings, gamerules, drop, game_colors):
 
     if gamerules.end_game_score_bool:
 
-        # for _render, _pos in gamerules.info1_lst:
-        #     settings.screen.blit(_render, _pos)
-
         for _render, _pos in gamerules.info2_lst:
             settings.screen.blit(_render, _pos)
 

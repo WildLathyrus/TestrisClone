@@ -23,6 +23,9 @@ class Settings:
         self.screen = pygame.display.set_mode(self.WINDOWSIZE)
         #self.pygame.display.set_icon(WINDOWLOGO)
         pygame.display.set_caption(" T E T R I S ")
+        
+        pygame_icon = pygame.image.load("images/tetris.png").convert()
+        pygame.display.set_icon(pygame_icon)
 
         # off set the screen to make room for score or menu later on
         x_offset, y_offset = 0, 0

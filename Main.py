@@ -1,0 +1,134 @@
+import pygame
+from pygame.locals import *
+
+import Settings as set
+import Blocks as block
+import GameRules as gam
+import Draw as draw
+
+import DropBlocks as drop
+
+import StartScreen as start
+import SettingsScreen as option
+import PauseScreen as pause
+import KeyMappingScreen as key
+
+
+class Main:
+
+    def __init__(self):
+
+        pygame.init()
+        pygame.mixer.init()
+
+        pygame.mouse.set_visible(False)
+
+        self.game_colors = block.game_colors[0]
+
+        self.settings = set.Settings()
+        self.keywatch = set.KeyInput()
+        self.audio = set.SoundEffects()
+        self.dropblocks = drop.UpdateDrop()
+        #self.blocks = blo.Board()
+        self.startscreen = start.StartScreenGame(self.settings, self.game_colors)
+        self.settingsscreen = option.SettingsScreenGame(self.settings, self.game_colors)
+        self.pausescreen = pause.PauseScreenGame(self.settings, self.game_colors)
+        self.keymapscreen = key.KeyMapScreenGame(self.settings, self.game_colors)
+
+        self.new_game = True
+
+        # run game
+        self.MainLoop()
+
+    def MainLoop(self):
+        # game loopl
+        while True:
+
+            if self.settings.CURRENTSCREEN["START"]:
+
+                self.keywatch.events(self.settings)
+                self.startscreen.start_screen_loop(self.settings, self.keywatch)
+                self.dropblocks.update_drop(self.settings, self.startscreen, block.block_lst)
+
+                self.audio.play_game_music(self.settings, self.keywatch)
+
+                draw.draw_main(self.settings, self.startscreen, self.dropblocks, self.game_colors)
+
+            elif self.settings.CURRENTSCREEN["SETTINGS"]:
+
+                self.keywatch.events(self.settings)
+                self.settingsscreen.settings_screen_loop(self.settings, self.keywatch)
+                self.dropblocks.update_drop(self.settings, self.startscreen, block.block_lst)
+
+                self.audio.volume = self.settingsscreen.master_volume / 100
+                self.audio.play_game_music(self.settings, self.keywatch)
+
+                draw.draw_settings(self.settings, self.startscreen, self.settingsscreen, self.dropblocks, self.game_colors)
+
+            elif self.settings.CURRENTSCREEN["GAME"]:
+
+                if self.new_game:
+                    self.dropblocks.new_drops = True
+                    self.new_game = False
+                    self.audio.play_music = True
+                    # setup new game
+                    self.gamerules = gam.GameLoopUpdate(self.settings, self.game_colors)
+
+                self.keywatch.events(self.settings)
+
+                self.gamerules.loop(self.settings, self.keywatch, block.block_lst)
+                self.audio.play_game_music(self.settings, self.keywatch)
+                self.new_game = self.gamerules.new_game
+
+                draw.draw_game(self.settings, self.gamerules, self.game_colors, self.keywatch.info)
+
+
+            elif self.settings.CURRENTSCREEN["KEYMAP"]:
+
+                self.keywatch.events(self.settings)
+                self.keymapscreen.keymap_screen_loop(self.settings, self.keywatch)
+                self.dropblocks.update_drop(self.settings, self.startscreen, block.block_lst)
+
+                draw.draw_keymap(self.settings, self.settingsscreen, self.keymapscreen, self.dropblocks, self.startscreen, self.game_colors)
+
+
+            elif self.settings.CURRENTSCREEN["PAUSE"]:
+
+                self.keywatch.events(self.settings)
+
+                self.audio.pause_music = True
+                self.audio.play_game_music(self.settings, self.keywatch)
+
+                self.pausescreen.pause_screen_loop(self.settings, self.keywatch)
+                self.new_game = self.pausescreen.new_game
+
+                draw.draw_pause(self.settings, self.pausescreen, self.gamerules, self.game_colors)
+
+            elif self.settings.CURRENTSCREEN["END"]:
+
+                self.keywatch.events(self.settings)
+
+                self.gamerules.end_loop_update(self.settings, self.keywatch)
+                self.audio.play_game_music(self.settings, self.keywatch)
+
+                self.dropblocks.update_drop(self.settings, self.startscreen, block.block_lst)
+
+                draw.draw_end(self.settings, self.gamerules, self.dropblocks, self.game_colors)
+
+                self.new_game = self.gamerules.new_game
+
+            else:
+
+                print("no screen selected")
+
+                for _screen, _bool in self.settings.CURRENTSCREEN.items():
+                    if _screen == "START":
+                        self.settings.CURRENTSCREEN[_screen] = True
+                    else:
+                        self.settings.CURRENTSCREEN[_screen] = False
+
+
+
+
+if __name__ == "__main__":
+    Main()

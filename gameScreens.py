@@ -2,7 +2,7 @@
     @author            ? ?
     @date_of_creation  July 8th, 2022
     @date_last_edit    July 8th, 2022
-    @version           V~.~~
+    @version           V1.13+
     @description       This file contains all the screens inwhich the user
                        will see. Previouse version these screen classes were
                        all seperate.
@@ -204,11 +204,11 @@ class SettingsScreenGame():
         self.option4title_pos = (_x, _y)
 
         # option 4 -> THEMES
-        self.themeIdx = block.themeIdx
+        block.themeIdx = block.themeIdx
         self.option4str = block.blockThemeNames
         self.option4font = pygame.font.Font(settings.FONT, self.fontsize)
         self.option4color = game_colors[3]
-        self.option4 = self.option4font.render(self.option4str[self.themeIdx], False, self.option4color)
+        self.option4 = self.option4font.render(self.option4str[block.themeIdx], False, self.option4color)
         _x = settings.WINDOWWIDTH // 2 - self.option4.get_width() // 2
         _y = settings.WINDOWHEIGHT // 2 - self.option4.get_height() // 2 + settings.BLOCKSIZE * 4
         self.option4_pos = (_x, _y)
@@ -262,8 +262,9 @@ class SettingsScreenGame():
     def settings_screen_loop(self, settings, keywatch, block):
 
         if keywatch.select:
-            #keywatch.select = False
+
             keywatch.can_select = True
+
             if self.option_select_pos == 0:
                 if self.ONOFFCONTROLLER == 0:
                     self.ONOFFCONTROLLER = 1
@@ -278,7 +279,7 @@ class SettingsScreenGame():
                 self.tringale_leftpos[0][0] = self.option1_pos[0] - self.triangle_left.get_width() * 1.5
                 self.tringale_rightpos[0][0] = self.option1_pos[0] + self.option1.get_width() + self.triangle_right.get_width() * 0.5
 
-            # OPTION 1
+            # SWITCH SCREEN TO KEYMAP
             elif self.option_select_pos == 1:
                 # CONTROLLER MAP
                 for _screen, _bool in settings.CURRENTSCREEN.items():
@@ -287,7 +288,7 @@ class SettingsScreenGame():
                     else:
                         settings.CURRENTSCREEN[_screen] = False
 
-            # OPTION 3
+            # UPDATE VOLUME
             elif self.option_select_pos == 2:
 
                 if self.volume == self.maxvolume - 1:
@@ -300,23 +301,23 @@ class SettingsScreenGame():
                 self.option3 = self.option3font.render(self.option3str[self.volume], False, self.option3color)
 
 
-            # OPTION 4 THEME
+            # UPDATE THEME
             elif self.option_select_pos == 3:
                 # THEME CHANGE
-                if self.themeIdx == len(self.option4str)-1:
-                    self.themeIdx = 0
-                else:
-                    self.themeIdx += 1
+                block.themeIdx += 1
+                if block.themeIdx == len(self.option4str)-1:
+                    block.themeIdx = 0
 
                 block.updateTheme()
 
-                self.option4 = self.option4font.render(self.option4str[self.themeIdx], False, self.option4color)
+                self.option4 = self.option4font.render(self.option4str[block.themeIdx], False, self.option4color)
                 _x = settings.WINDOWWIDTH // 2 - self.option4.get_width() // 2
                 _y = settings.WINDOWHEIGHT // 2 - self.option4.get_height() // 2 + settings.BLOCKSIZE * 4
                 self.option4_pos = (_x, _y)
 
                 keywatch.can_select = True
 
+            # SWITCH BACK TO START SCREEN
             elif self.option_select_pos == 4:
                 for _screen, _bool in settings.CURRENTSCREEN.items():
                     if _screen == "START":
@@ -326,23 +327,52 @@ class SettingsScreenGame():
 
                 self.option_select_pos = 0
 
+        # KEY MAP USING THE ARROW KEYS
+        elif (keywatch.move_left or keywatch.move_right) and self.option_select_pos == 1:
+            # CONTROLLER MAP
+            keywatch.can_select = True
+            for _screen, _bool in settings.CURRENTSCREEN.items():
+                if _screen == "KEYMAP":
+                    settings.CURRENTSCREEN[_screen] = True
+                else:
+                    settings.CURRENTSCREEN[_screen] = False        
+
+        # UPDATE BLOCK THEME
+        elif (keywatch.move_left or keywatch.move_right) and self.option_select_pos == 3:
+
+            if keywatch.move_right: # right
+                block.themeIdx += 1
+                if block.themeIdx == len(self.option4str)-1:
+                    block.themeIdx = 0
+                keywatch.move_right = False
+            else: # left
+                block.themeIdx -= 1
+                if block.themeIdx < 0:
+                    block.themeIdx = len(self.option4str)-1
+                keywatch.move_left = False
+
+            block.updateTheme()
+
+            self.option4 = self.option4font.render(self.option4str[block.themeIdx], False, self.option4color)
+            _x = settings.WINDOWWIDTH // 2 - self.option4.get_width() // 2
+            _y = settings.WINDOWHEIGHT // 2 - self.option4.get_height() // 2 + settings.BLOCKSIZE * 4
+            self.option4_pos = (_x, _y)
+            keywatch.can_select = True
 
         elif (keywatch.move_left or keywatch.move_right) and self.option_select_pos == 2:
 
             if keywatch.move_left and self.volume > 0:
                 self.volume -= 1
                 self.master_volume -= self.master_volume_control
-                keywatch.can_select = True
                 keywatch.move_left = False
 
             elif keywatch.move_right and self.volume < 5:
                 self.volume += 1
                 self.master_volume += self.master_volume_control
-                keywatch.can_select = True
                 keywatch.move_right = False
 
-
             self.option3 = self.option3font.render(self.option3str[self.volume], False, self.option3color)
+            keywatch.can_select = True
 
         elif keywatch.move_rotate and self.option_select_pos > 0:
             self.option_select_pos -= 1

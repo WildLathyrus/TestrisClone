@@ -227,7 +227,8 @@ class GameBlocks():
     boardThemes = [
                     pygame.Color("#332f35"), # board_color
                     pygame.Color('#1f1c23'), # boarder_color
-                    pygame.Color('#e2a97e'), # title_color
+                    pygame.Color('#f2efe3'), # title_color
+                    #pygame.Color('#e2ac69'), # title_color
                     pygame.Color("#B6BFC6"), # font_color
                   ]
 
@@ -243,7 +244,7 @@ class GameBlocks():
 
     def changeBlockTheme(self, idx=0):
         # the index in the selected theme from blockThemes
-        if idx >= len(self.blockThemes):
+        if idx > len(self.blockThemes):
             idx = 0
             raise Exception(f"idx must be in range of the block themes list -> {0} to {len(self.blockThemes)-1}")
 
@@ -252,10 +253,9 @@ class GameBlocks():
 
     def changeGameTheme(self, idx=0):
         self.boardTheme = self.boardThemes.copy()
-        self.boardTheme[2] = self.blockThemes[idx][0]
+        #self.boardTheme[2] = self.blockThemes[idx][0]
 
     def updateTheme(self):
-        print("update")
         self.changeBlockTheme(self.themeIdx)
         self.changeGameTheme(self.themeIdx)
 

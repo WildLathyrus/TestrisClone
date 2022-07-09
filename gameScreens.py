@@ -65,7 +65,7 @@ class StartScreenGame():
         self.option3_pos = (_x, _y)
 
         # option 3 -> EXIT
-        self.option4str = self.versionStr(VERSION)
+        self.option4str = StartScreenGame.versionStr(VERSION)
         self.option4font = pygame.font.Font(settings.FONT, 8)
         self.option4color = game_colors[3]
         self.option4 = self.option4font.render(self.option4str, False, self.option4color)
@@ -100,13 +100,13 @@ class StartScreenGame():
         _y3 = self.option3_pos[1]
         self.tringale_rightpos = [(_x1, _y1), (_x2, _y2), (_x3, _y3)]
 
-    def versionStr(self, version):
+    @staticmethod
+    def versionStr(version):
         version = str(version)
         returnVersion = "V"
         for i in version:
             returnVersion += "  "+ i
         return returnVersion
-
 
     def start_screen_loop(self, settings, keywatch):
 
@@ -140,7 +140,8 @@ class StartScreenGame():
 
 class SettingsScreenGame():
 
-    def __init__(self, settings, game_colors):
+    def __init__(self, settings, game_colors, block):
+
         self.fontsize = 16
         # otions font blit
         # option 1 -> start
@@ -193,7 +194,7 @@ class SettingsScreenGame():
         _y = settings.WINDOWHEIGHT // 2 - self.option3.get_height() // 2 + settings.BLOCKSIZE * 1.25
         self.option3_pos = (_x, _y)
 
-        # option 4 -> EXIT
+        # option 4 -> THEME TITLE
         self.option4titlestr = "THEMES"
         self.option4titlefont = pygame.font.Font(settings.FONT, self.fontsize)
         self.option4titlecolor = game_colors[3]
@@ -202,12 +203,12 @@ class SettingsScreenGame():
         _y = settings.WINDOWHEIGHT // 2 - self.option4title.get_height() // 2 + settings.BLOCKSIZE * 2.75
         self.option4title_pos = (_x, _y)
 
-        # option 5 -> BACK TO MENU
-        self.theme = 0
-        self.option4str = ["ORIGINAL"]
+        # option 4 -> THEMES
+        self.themeIdx = block.themeIdx
+        self.option4str = block.blockThemeNames
         self.option4font = pygame.font.Font(settings.FONT, self.fontsize)
         self.option4color = game_colors[3]
-        self.option4 = self.option4font.render(self.option4str[self.theme], False, self.option4color)
+        self.option4 = self.option4font.render(self.option4str[self.themeIdx], False, self.option4color)
         _x = settings.WINDOWWIDTH // 2 - self.option4.get_width() // 2
         _y = settings.WINDOWHEIGHT // 2 - self.option4.get_height() // 2 + settings.BLOCKSIZE * 4
         self.option4_pos = (_x, _y)
@@ -258,7 +259,7 @@ class SettingsScreenGame():
         self.option_select_pos = 0
         self.option_select_pos_max = len(self.tringale_leftpos) - 1
 
-    def settings_screen_loop(self, settings, keywatch):
+    def settings_screen_loop(self, settings, keywatch, block):
 
         if keywatch.select:
             #keywatch.select = False
@@ -277,6 +278,7 @@ class SettingsScreenGame():
                 self.tringale_leftpos[0][0] = self.option1_pos[0] - self.triangle_left.get_width() * 1.5
                 self.tringale_rightpos[0][0] = self.option1_pos[0] + self.option1.get_width() + self.triangle_right.get_width() * 0.5
 
+            # OPTION 1
             elif self.option_select_pos == 1:
                 # CONTROLLER MAP
                 for _screen, _bool in settings.CURRENTSCREEN.items():
@@ -285,6 +287,7 @@ class SettingsScreenGame():
                     else:
                         settings.CURRENTSCREEN[_screen] = False
 
+            # OPTION 3
             elif self.option_select_pos == 2:
 
                 if self.volume == self.maxvolume - 1:
@@ -296,10 +299,22 @@ class SettingsScreenGame():
 
                 self.option3 = self.option3font.render(self.option3str[self.volume], False, self.option3color)
 
+
+            # OPTION 4 THEME
             elif self.option_select_pos == 3:
                 # THEME CHANGE
-                """ change the color theme of the game. chang in the block.py file
-                    DEFINITLLY DO LATE OR EVEN LAST """
+                if self.themeIdx == len(self.option4str)-1:
+                    self.themeIdx = 0
+                else:
+                    self.themeIdx += 1
+
+                block.updateTheme()
+
+                self.option4 = self.option4font.render(self.option4str[self.themeIdx], False, self.option4color)
+                _x = settings.WINDOWWIDTH // 2 - self.option4.get_width() // 2
+                _y = settings.WINDOWHEIGHT // 2 - self.option4.get_height() // 2 + settings.BLOCKSIZE * 4
+                self.option4_pos = (_x, _y)
+
                 keywatch.can_select = True
 
             elif self.option_select_pos == 4:
@@ -470,9 +485,10 @@ class PauseScreenGame():
                     settings.CURRENTSCREEN[_screen] = False
 
 class EndScreen:
-
+    """
+    Some sort of end animation before the end score
+    """
     def __init__(self):
-
         pass
 
 if __name__ == "__main__":

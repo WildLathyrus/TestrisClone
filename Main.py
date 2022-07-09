@@ -2,15 +2,10 @@
     @author            Josh Page
     @date_of_creation  July 8th, 2022
     @date_last_edit    ?? ??, 2022
-    @version           V1.14
-    @description       main file - run to run game
+    @version           V1.15
+    @description       convert the Blocks file into a class
 
 """
-
-# Currnet->  version: 1
-#            undate: 13
-#
-#     : combined screen files into one file.
 
 
 
@@ -18,9 +13,9 @@ import pygame
 from pygame.locals import *
 
 import Settings as set
-import Blocks as block
 import GameRules as gam
 import Draw as draw
+import Blocks as blocks
 
 import DropBlocks as drop
 import gameScreens as gs
@@ -28,7 +23,7 @@ import gameScreens as gs
 
 class Main:
 
-    VERSION = 1.14
+    VERSION = 1.15
 
     pygame.init()
 
@@ -36,17 +31,17 @@ class Main:
 
     pygame.mouse.set_visible(False)
 
-    game_colors = block.game_colors[0]
+    block = blocks.GameBlocks()
 
     settings = set.Settings()
     keywatch = set.KeyInput()
     audio = set.SoundEffects()
     dropblocks = drop.UpdateDrop()
 
-    startscreen = gs.StartScreenGame(settings, game_colors, VERSION)
-    settingsscreen = gs.SettingsScreenGame(settings, game_colors)
-    pausescreen = gs.PauseScreenGame(settings, game_colors)
-    keymapscreen = gs.KeyMapScreenGame(settings, game_colors)
+    startscreen = gs.StartScreenGame(settings, block.boardTheme, VERSION)
+    settingsscreen = gs.SettingsScreenGame(settings, block.boardTheme, block)
+    pausescreen = gs.PauseScreenGame(settings, block.boardTheme)
+    keymapscreen = gs.KeyMapScreenGame(settings, block.boardTheme)
 
     new_game = True
 
@@ -61,22 +56,22 @@ class Main:
 
                 self.keywatch.events(self.settings)
                 self.startscreen.start_screen_loop(self.settings, self.keywatch)
-                self.dropblocks.update_drop(self.settings, self.startscreen, block.block_lst)
+                self.dropblocks.update_drop(self.settings, self.startscreen, self.block.block_lst)
 
                 self.audio.play_game_music(self.settings, self.keywatch)
 
-                draw.draw_main(self.settings, self.startscreen, self.dropblocks, self.game_colors)
+                draw.draw_main(self.settings, self.startscreen, self.dropblocks, self.block.boardTheme)
 
             elif self.settings.CURRENTSCREEN["SETTINGS"]:
 
                 self.keywatch.events(self.settings)
-                self.settingsscreen.settings_screen_loop(self.settings, self.keywatch)
-                self.dropblocks.update_drop(self.settings, self.startscreen, block.block_lst)
+                self.settingsscreen.settings_screen_loop(self.settings, self.keywatch, self.block)
+                self.dropblocks.update_drop(self.settings, self.startscreen, self.block.block_lst)
 
                 self.audio.volume = self.settingsscreen.master_volume / 100
                 self.audio.play_game_music(self.settings, self.keywatch)
 
-                draw.draw_settings(self.settings, self.startscreen, self.settingsscreen, self.dropblocks, self.game_colors)
+                draw.draw_settings(self.settings, self.startscreen, self.settingsscreen, self.dropblocks, self.block.boardTheme)
 
             elif self.settings.CURRENTSCREEN["GAME"]:
 
@@ -85,24 +80,24 @@ class Main:
                     self.new_game = False
                     self.audio.play_music = True
                     # setup new game
-                    self.gamerules = gam.GameLoopUpdate(self.settings, self.game_colors)
+                    self.gamerules = gam.GameLoopUpdate(self.settings, self.block.boardTheme)
 
                 self.keywatch.events(self.settings)
 
-                self.gamerules.loop(self.settings, self.keywatch, block.block_lst)
+                self.gamerules.loop(self.settings, self.keywatch, self.block.block_lst)
                 self.audio.play_game_music(self.settings, self.keywatch)
                 self.new_game = self.gamerules.new_game
 
-                draw.draw_game(self.settings, self.gamerules, self.game_colors, self.keywatch.info)
+                draw.draw_game(self.settings, self.gamerules, self.block.boardTheme, self.keywatch.info)
 
 
             elif self.settings.CURRENTSCREEN["KEYMAP"]:
 
                 self.keywatch.events(self.settings)
                 self.keymapscreen.keymap_screen_loop(self.settings, self.keywatch)
-                self.dropblocks.update_drop(self.settings, self.startscreen, block.block_lst)
+                self.dropblocks.update_drop(self.settings, self.startscreen, self.block.block_lst)
 
-                draw.draw_keymap(self.settings, self.settingsscreen, self.keymapscreen, self.dropblocks, self.startscreen, self.game_colors)
+                draw.draw_keymap(self.settings, self.settingsscreen, self.keymapscreen, self.dropblocks, self.startscreen, self.block.boardTheme)
 
 
             elif self.settings.CURRENTSCREEN["PAUSE"]:
@@ -115,7 +110,7 @@ class Main:
                 self.pausescreen.pause_screen_loop(self.settings, self.keywatch)
                 self.new_game = self.pausescreen.new_game
 
-                draw.draw_pause(self.settings, self.pausescreen, self.gamerules, self.game_colors)
+                draw.draw_pause(self.settings, self.pausescreen, self.gamerules, self.block.boardTheme)
 
             elif self.settings.CURRENTSCREEN["END"]:
 
@@ -124,9 +119,9 @@ class Main:
                 self.gamerules.end_loop_update(self.settings, self.keywatch)
                 self.audio.play_game_music(self.settings, self.keywatch)
 
-                self.dropblocks.update_drop(self.settings, self.startscreen, block.block_lst)
+                self.dropblocks.update_drop(self.settings, self.startscreen, self.block_lst)
 
-                draw.draw_end(self.settings, self.gamerules, self.dropblocks, self.game_colors)
+                draw.draw_end(self.settings, self.gamerules, self.dropblocks, self.block.boardTheme)
 
                 self.new_game = self.gamerules.new_game
 
@@ -139,6 +134,9 @@ class Main:
                         self.settings.CURRENTSCREEN[_screen] = True
                     else:
                         self.settings.CURRENTSCREEN[_screen] = False
+
+    def updateScreenThemes(self):
+        pass
 
 
 

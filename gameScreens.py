@@ -305,7 +305,7 @@ class SettingsScreenGame():
             elif self.option_select_pos == 3:
                 # THEME CHANGE
                 block.themeIdx += 1
-                if block.themeIdx == len(self.option4str)-1:
+                if block.themeIdx == len(self.option4str):
                     block.themeIdx = 0
 
                 block.updateTheme()
@@ -335,14 +335,14 @@ class SettingsScreenGame():
                 if _screen == "KEYMAP":
                     settings.CURRENTSCREEN[_screen] = True
                 else:
-                    settings.CURRENTSCREEN[_screen] = False        
+                    settings.CURRENTSCREEN[_screen] = False
 
         # UPDATE BLOCK THEME
         elif (keywatch.move_left or keywatch.move_right) and self.option_select_pos == 3:
 
             if keywatch.move_right: # right
                 block.themeIdx += 1
-                if block.themeIdx == len(self.option4str)-1:
+                if block.themeIdx == len(self.option4str):
                     block.themeIdx = 0
                 keywatch.move_right = False
             else: # left
@@ -357,6 +357,7 @@ class SettingsScreenGame():
             _x = settings.WINDOWWIDTH // 2 - self.option4.get_width() // 2
             _y = settings.WINDOWHEIGHT // 2 - self.option4.get_height() // 2 + settings.BLOCKSIZE * 4
             self.option4_pos = (_x, _y)
+
             keywatch.can_select = True
 
         elif (keywatch.move_left or keywatch.move_right) and self.option_select_pos == 2:

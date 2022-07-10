@@ -1,13 +1,11 @@
 """
     @author            Josh Page
-    @date_of_creation  July 8th, 2022
+    @date_of_creation  Nov, ??, 2021
     @date_last_edit    ?? ??, 2022
     @version           V1.15
-    @description       convert the Blocks file into a class
+    @description       RUN GAME!
 
 """
-
-
 
 import pygame
 from pygame.locals import *
@@ -134,9 +132,6 @@ class Main:
                         self.settings.CURRENTSCREEN[_screen] = True
                     else:
                         self.settings.CURRENTSCREEN[_screen] = False
-
-    def updateScreenThemes(self):
-        pass
 
 
 

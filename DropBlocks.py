@@ -1,3 +1,13 @@
+"""
+    @author            ? ?
+    @date_of_creation  July 8th, 2022
+    @date_last_edit    July 8th, 2022
+    @version           V?.?? -> from my original code before recording versions
+    @description       This file is for the falling blocks in the start and menu
+                       screens.
+"""
+
+
 import pygame
 from pygame.locals import *
 
@@ -27,7 +37,6 @@ class DropBlock():
                         "rec": None,
                         "rotate": None,
                         }
-
 
         _x_pos = DropBlock.positive_or_negative() * random.randint(0,settings.COLUMN*1.5)
         _y_pos = -1 * random.randint(2, settings.COLUMN)
@@ -113,17 +122,17 @@ class UpdateDrop():
             self.fall_block_lst = sorted(self.fall_block_lst, key=lambda z:z.z)
 
         for _block in self.fall_block_lst:
+
             _pop_block = False
-            if True:#self.start_current_time - _block.time > _block.time_speed:
-                _block.time = time.time()
-                for _rec in _block.falling_blocks:
-                    #print(_rec["pos"].y, _block.block_size, _block.speed)
+            _block.time = time.time()
 
-                    _rec["pos"].y += _block.speed
-                    _rec["rec"] = pygame.Rect(_rec["pos"],(_block.block_size, _block.block_size))
+            for _rec in _block.falling_blocks:
 
-                    if _rec["pos"].y > settings.WINDOWHEIGHT + settings.WINDOWHEIGHT // 3:
-                        _pop_block = True
+                _rec["pos"].y += _block.speed
+                _rec["rec"] = pygame.Rect(_rec["pos"],(_block.block_size, _block.block_size))
+
+                if _rec["pos"].y > settings.WINDOWHEIGHT + settings.WINDOWHEIGHT // 3:
+                    _pop_block = True
 
             if _pop_block:
                 self.fall_block_lst.remove(_block)

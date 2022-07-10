@@ -1,3 +1,16 @@
+"""
+    @author            ? ?
+    @date_of_creation  July 8th, 2022
+    @date_last_edit    July 8th, 2022
+    @version           V?.?? -> from my original code before recording versions
+    @description       This file is for all the backround game managment
+                        -> setup settings
+                        -> terminate program
+                        -> sound and sound event triggers
+                        -> keyinput and key event triggers
+"""
+
+
 import pygame
 from pygame.locals import *
 
@@ -23,7 +36,7 @@ class Settings:
         self.screen = pygame.display.set_mode(self.WINDOWSIZE)
         #self.pygame.display.set_icon(WINDOWLOGO)
         pygame.display.set_caption(" T E T R I S ")
-        
+
         pygame_icon = pygame.image.load("images/tetris.png").convert()
         pygame.display.set_icon(pygame_icon)
 

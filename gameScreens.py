@@ -497,7 +497,7 @@ class PauseScreenGame():
             # RESTART
             self.new_game = True
             keywatch.move_right = False
-            print("PAUSE START")
+            #print("PAUSE START")
             for _screen, _bool in settings.CURRENTSCREEN.items():
                 if _screen == "START":
                     settings.CURRENTSCREEN[_screen] = True
@@ -508,7 +508,7 @@ class PauseScreenGame():
             # MENU
             keywatch.move_left = False
             self.new_game = True
-            print("PAUSE GAME")
+            #print("PAUSE GAME")
             for _screen, _bool in settings.CURRENTSCREEN.items():
                 if _screen == "GAME":
                     settings.CURRENTSCREEN[_screen] = True

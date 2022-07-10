@@ -1,3 +1,13 @@
+"""
+    @author            ? ?
+    @date_of_creation  Nov ??th, 2021
+    @date_last_edit    Nov ??th, 2021
+    @version           V?.?? -> from my original code before recording versions
+    @description       Draws all rectangle on the surface. If its on the
+                       surface, it is drawn here!
+"""
+
+
 import pygame
 from pygame.locals import *
 

@@ -1,7 +1,3 @@
-import pygame
-from pygame.locals import *
-
-
 """
     @author            Josh Page
     @date_of_creation  July 8th, 2022
@@ -21,6 +17,9 @@ from pygame.locals import *
                         SOULD THIS BE A JSON? or aleast the blocks
 
 """
+
+import pygame
+from pygame.locals import *
 
 class GameBlocks():
     """
@@ -228,7 +227,7 @@ class GameBlocks():
                     pygame.Color("#332f35"), # board_color
                     pygame.Color('#1f1c23'), # boarder_color
                     pygame.Color('#f2efe3'), # title_color
-                    #pygame.Color('#e2ac69'), # title_color
+                    #pygame.Color('#e2ac69'), # title_color -> original title color
                     pygame.Color("#B6BFC6"), # font_color
                   ]
 
